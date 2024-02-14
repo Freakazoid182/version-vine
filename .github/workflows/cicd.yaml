@@ -1,0 +1,103 @@
+name: Deploy
+
+on:
+  push:
+    tags:
+      - "*"
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    name: cargo test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - run: cargo test --all-features
+
+  # Check formatting with rustfmt
+  formatting:
+    name: cargo fmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: rustfmt
+      - name: Rustfmt Check
+        uses: actions-rust-lang/rustfmt@v1
+
+  build-and-upload:
+    name: Build and upload
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        include:
+          - build: linux-x86_64
+            os: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+
+          - build: macos-x86_64
+            os: macos-latest
+            target: x86_64-apple-darwin
+
+          - build: macos-aarch64
+            os: macos-latest
+            target: aarch64-apple-darwin
+
+          - build: windows-msvc-x86_64
+            os: windows-latest
+            target: x86_64-pc-windows-msvc
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          target: ${{ matrix.target }}
+
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: true
+          command: build
+          args: --verbose --release --target ${{ matrix.target }}
+
+      - name: Build archive
+        shell: bash
+        run: |
+          binary_name="version-vine"
+
+          filename="${{ github.ref_name }}-${{ matrix.target }}"
+          mkdir "$filename"
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            mv "target/${{ matrix.target }}/release/$binary_name.exe" "$filename"
+          else
+            mv "target/${{ matrix.target }}/release/$binary_name" "$filename"
+          fi
+
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            7z a "$filename.zip" "$filename"
+            certutil -hashfile "$filename.zip" SHA256 > "$filename.zip.sha256"
+            echo "ASSET=$filename.zip" >> $GITHUB_ENV
+            echo "ASSET_SUM=$filename.zip.sha256" >> $GITHUB_ENV
+          else
+            tar -czf "$filename.tar.gz" "$filename"
+            shasum -a 256 "$filename.tar.gz" > "$filename.tar.gz.sha256"
+            echo "ASSET=$filename.tar.gz" >> $GITHUB_ENV
+            echo "ASSET_SUM=$filename.tar.gz.sha256" >> $GITHUB_ENV
+          fi
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ${{ env.ASSET }}
+            ${{ env.ASSET_SUM }}
