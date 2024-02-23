@@ -7,7 +7,7 @@ It's intended to be simple and fast.
 
 ## Installation
 
-Download the binary for your architechture from the [Releases](https://github.com/Freakazoid182/version-vine/releases).
+Download the binary for your architecture from the [Releases](https://github.com/Freakazoid182/version-vine/releases).
 
 Store it anywhere you prefer
 
@@ -19,14 +19,14 @@ Run from any folder which is managed by Git
 Usage: version-vine [OPTIONS]
 
 Options:
-  -a, --app-name <APP_NAME>          Useful for monorepos with mutiple versionable applications. Tags and release branches will have to be prefixed with an application name. E.g. tag: `app-1.0.0`, branch: `release/app-1.0.0`
-  -b, --build-nubmer <BUILD_NUBMER>  Build number to be included in the SemVer build metadata. Often used when using a build system. When not provided, the git commit count for the branch is used
-  -s, --skip-fetch                   Skip fetching (impoves performance for local runs, but may result in outdated version information)
+  -a, --app-name <APP_NAME>          Useful for monorepos with multiple versionable applications. Tags and release branches will have to be prefixed with an application name. E.g. tag: `app-1.0.0`, branch: `release/app-1.0.0`
+  -b, --build-number <BUILD_NUMBER>  Build number to be included in the SemVer build metadata. Often used when using a build system. When not provided, the git commit count for the branch is used
+  -s, --skip-fetch                   Skip fetching (improves performance for local runs, but may result in outdated version information)
   -h, --help                         Print help
   -V, --version                      Print version
 ```
 
-Based on which git branch is active and latest tag, the appropirate version data will be generated.
+Based on which git branch is active and latest tag, the appropriate version data will be generated.
 
 E.g. on the `main` branch where the latest tag is `0.4.0`:
 ```sh
@@ -61,3 +61,5 @@ For `release/*` and `hotfix/*` branches, tags are ignored and the version will b
 
 ---
 Inspired by tools like [GitVersion](https://github.com/GitTools/GitVersion) and [Dunamai](https://github.com/mtkennerly/dunamai)
+
+Thanks to [@ekeij](https://github.com/ekeij)

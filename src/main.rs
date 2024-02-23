@@ -11,15 +11,15 @@ use serde_json::{json, to_string_pretty, Value};
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
-    /// Useful for monorepos with mutiple versionable applications. Tags and release branches will have to be prefixed with an application name. E.g. tag: `app-1.0.0`, branch: `release/app-1.0.0`.
+    /// Useful for monorepos with multiple versionable applications. Tags and release branches will have to be prefixed with an application name. E.g. tag: `app-1.0.0`, branch: `release/app-1.0.0`.
     #[arg(short, long)]
     app_name: Option<String>,
 
     /// Build number to be included in the SemVer build metadata. Often used when using a build system. When not provided, the git commit count for the branch is used.
     #[arg(short, long)]
-    build_nubmer: Option<u32>,
+    build_number: Option<u32>,
 
-    /// Skip fetching (impoves performance for local runs, but may result in outdated version information)
+    /// Skip fetching (improves performance for local runs, but may result in outdated version information)
     #[arg(short, long, action)]
     skip_fetch: bool,
 }
@@ -88,8 +88,8 @@ fn update_version(
 }
 
 fn get_count(args: &Args, rev_count: &str) -> Result<u32, Error> {
-    let counter = if args.build_nubmer.is_some() {
-        args.build_nubmer.unwrap()
+    let counter = if args.build_number.is_some() {
+        args.build_number.unwrap()
     } else {
         rev_count.parse::<u32>()?
     };
@@ -141,9 +141,9 @@ fn get_version(
 
         // For the main branch, a tag must exist on the current commit
         if regexes.main_branches.is_match(git_branch) {
-            let extact_tag =
+            let exact_tag =
                 git_command.run(vec!["describe", "--abbrev=0", "--exact-match", "--tags"])?;
-            if extact_tag != tag {
+            if exact_tag != tag {
                 return Err(Error::msg(
                     "Cannot version a production release from a commit without a tag",
                 ));
@@ -183,7 +183,7 @@ mod tests {
 
         let args = Args {
             app_name: Some(app_name.unwrap().to_owned()),
-            build_nubmer: None,
+            build_number: None,
             skip_fetch: false,
         };
 
@@ -211,7 +211,7 @@ mod tests {
 
         let args = Args {
             app_name: Some(String::from("myapp")),
-            build_nubmer: None,
+            build_number: None,
             skip_fetch: false,
         };
 
@@ -239,7 +239,7 @@ mod tests {
 
         let args = Args {
             app_name: None,
-            build_nubmer: None,
+            build_number: None,
             skip_fetch: false,
         };
 
@@ -267,7 +267,7 @@ mod tests {
 
         let args = Args {
             app_name: None,
-            build_nubmer: None,
+            build_number: None,
             skip_fetch: false,
         };
 
@@ -295,7 +295,7 @@ mod tests {
 
         let args = Args {
             app_name: Some(String::from("myapp")),
-            build_nubmer: None,
+            build_number: None,
             skip_fetch: false,
         };
 
@@ -325,7 +325,7 @@ mod tests {
 
         let args = Args {
             app_name: Some(String::from("myapp")),
-            build_nubmer: None,
+            build_number: None,
             skip_fetch: false,
         };
 
@@ -356,7 +356,7 @@ mod tests {
 
         let args = Args {
             app_name: None,
-            build_nubmer: None,
+            build_number: None,
             skip_fetch: false,
         };
 
@@ -386,7 +386,7 @@ mod tests {
 
         let args = Args {
             app_name: None,
-            build_nubmer: None,
+            build_number: None,
             skip_fetch: false,
         };
 
@@ -417,7 +417,7 @@ mod tests {
 
         let args = Args {
             app_name: Some(String::from("myapp")),
-            build_nubmer: None,
+            build_number: None,
             skip_fetch: false,
         };
 
@@ -446,7 +446,7 @@ mod tests {
 
         let args = Args {
             app_name: Some(String::from("myapp")),
-            build_nubmer: None,
+            build_number: None,
             skip_fetch: false,
         };
 
@@ -475,7 +475,7 @@ mod tests {
 
         let args = Args {
             app_name: None,
-            build_nubmer: None,
+            build_number: None,
             skip_fetch: false,
         };
 
@@ -504,7 +504,7 @@ mod tests {
 
         let args = Args {
             app_name: None,
-            build_nubmer: None,
+            build_number: None,
             skip_fetch: false,
         };
 
@@ -533,7 +533,7 @@ mod tests {
 
         let args = Args {
             app_name: Some(String::from("myapp")),
-            build_nubmer: None,
+            build_number: None,
             skip_fetch: false,
         };
 
@@ -563,7 +563,7 @@ mod tests {
 
         let args = Args {
             app_name: Some(String::from("myapp")),
-            build_nubmer: None,
+            build_number: None,
             skip_fetch: false,
         };
 
@@ -593,7 +593,7 @@ mod tests {
 
         let args = Args {
             app_name: None,
-            build_nubmer: None,
+            build_number: None,
             skip_fetch: false,
         };
 
@@ -623,7 +623,7 @@ mod tests {
 
         let args = Args {
             app_name: None,
-            build_nubmer: None,
+            build_number: None,
             skip_fetch: false,
         };
 

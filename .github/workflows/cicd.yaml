@@ -76,20 +76,17 @@ jobs:
           binary_name="version-vine"
 
           filename="${{ github.ref_name }}-${{ matrix.target }}"
-          mkdir "$filename"
           if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            mv "target/${{ matrix.target }}/release/$binary_name.exe" "$filename"
-          else
-            mv "target/${{ matrix.target }}/release/$binary_name" "$filename"
-          fi
-
-          if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            7z a "$filename.zip" "$filename"
+            pushd target/${{ matrix.target }}/release
+            7z a "../../../$filename.zip" "$binary_name.exe"
+            popd
             certutil -hashfile "$filename.zip" SHA256 > "$filename.zip.sha256"
             echo "ASSET=$filename.zip" >> $GITHUB_ENV
             echo "ASSET_SUM=$filename.zip.sha256" >> $GITHUB_ENV
           else
-            tar -czf "$filename.tar.gz" "$filename"
+            pushd target/${{ matrix.target }}/release
+            tar -czf "../../../$filename.tar.gz" "$binary_name"
+            popd
             shasum -a 256 "$filename.tar.gz" > "$filename.tar.gz.sha256"
             echo "ASSET=$filename.tar.gz" >> $GITHUB_ENV
             echo "ASSET_SUM=$filename.tar.gz.sha256" >> $GITHUB_ENV
