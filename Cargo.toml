@@ -1,6 +1,6 @@
 [package]
 name = "version-vine"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Freek van Zee"]
 description = """
@@ -14,7 +14,7 @@ It's intended to be simple and fast
 anyhow = "1.0.79"
 clap = { version = "4.4.17", features = ["derive"] }
 mockall = "0.12.1"
-regex = "1.10.2"
+regex-lite = "0.1.5"
 semver = "1.0.21"
 serde_json = "1.0.111"
 
@@ -22,3 +22,5 @@ serde_json = "1.0.111"
 strip = true  # Automatically strip symbols from the binary.
 opt-level = "z"  # Optimize for size instead of speed.
 panic = "abort" # Abort on panic. Reduces binary size.
+lto = true
+codegen-units = 1

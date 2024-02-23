@@ -1,5 +1,5 @@
 use anyhow::Error;
-use regex::Regex;
+use regex_lite::Regex;
 
 pub struct Regexes {
     pub tag: Regex,
