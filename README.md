@@ -21,7 +21,7 @@ Usage: version-vine [OPTIONS]
 Options:
   -a, --app-name <APP_NAME>          Useful for monorepos with multiple versionable applications. Tags and release branches will have to be prefixed with an application name. E.g. tag: `app-1.0.0`, branch: `release/app-1.0.0`
   -b, --build-number <BUILD_NUMBER>  Build number to be included in the SemVer build metadata. Often used when using a build system. When not provided, the git commit count for the branch is used
-  -s, --skip-fetch                   Skip fetching (improves performance for local runs, but may result in outdated version information)
+  -f, --fetch                        Include fetching (decreases performance for local runs, but ensures latest information is used)
   -h, --help                         Print help
   -V, --version                      Print version
 ```

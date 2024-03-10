@@ -19,9 +19,9 @@ struct Args {
     #[arg(short, long)]
     build_number: Option<u32>,
 
-    /// Skip fetching (improves performance for local runs, but may result in outdated version information)
+    /// Include fetching (decreases performance for local runs, but ensures latest information is used)
     #[arg(short, long, action)]
-    skip_fetch: bool,
+    fetch: bool,
 }
 
 fn main() -> Result<()> {
@@ -34,7 +34,7 @@ fn main() -> Result<()> {
 
 fn get_version_output(args: &Args, git_command: &impl GitCommandTrait) -> Result<Value, Error> {
     let regexes = Regexes::new(&args.app_name)?;
-    if !args.skip_fetch {
+    if args.fetch {
         git_command.run(vec!["fetch", "--tags"])?;
     }
     let git_branch = git_command.run(vec!["branch", "--show-current"])?;
@@ -184,7 +184,7 @@ mod tests {
         let args = Args {
             app_name: Some(app_name.unwrap().to_owned()),
             build_number: None,
-            skip_fetch: false,
+            fetch: false,
         };
 
         mock_git(&mut git_command, app_name, branch, rev, count, version);
@@ -212,7 +212,7 @@ mod tests {
         let args = Args {
             app_name: Some(String::from("myapp")),
             build_number: None,
-            skip_fetch: false,
+            fetch: false,
         };
 
         mock_git(&mut git_command, app_name, branch, rev, count, version);
@@ -240,7 +240,7 @@ mod tests {
         let args = Args {
             app_name: None,
             build_number: None,
-            skip_fetch: false,
+            fetch: false,
         };
 
         mock_git(&mut git_command, app_name, branch, rev, count, version);
@@ -268,7 +268,7 @@ mod tests {
         let args = Args {
             app_name: None,
             build_number: None,
-            skip_fetch: false,
+            fetch: false,
         };
 
         mock_git(&mut git_command, app_name, branch, rev, count, version);
@@ -296,7 +296,7 @@ mod tests {
         let args = Args {
             app_name: Some(String::from("myapp")),
             build_number: None,
-            skip_fetch: false,
+            fetch: false,
         };
 
         mock_git(&mut git_command, app_name, branch, rev, count, version);
@@ -326,7 +326,7 @@ mod tests {
         let args = Args {
             app_name: Some(String::from("myapp")),
             build_number: None,
-            skip_fetch: false,
+            fetch: false,
         };
 
         mock_git(&mut git_command, app_name, branch, rev, count, version);
@@ -357,7 +357,7 @@ mod tests {
         let args = Args {
             app_name: None,
             build_number: None,
-            skip_fetch: false,
+            fetch: false,
         };
 
         mock_git(&mut git_command, app_name, branch, rev, count, version);
@@ -387,7 +387,7 @@ mod tests {
         let args = Args {
             app_name: None,
             build_number: None,
-            skip_fetch: false,
+            fetch: false,
         };
 
         mock_git(&mut git_command, app_name, branch, rev, count, version);
@@ -418,7 +418,7 @@ mod tests {
         let args = Args {
             app_name: Some(String::from("myapp")),
             build_number: None,
-            skip_fetch: false,
+            fetch: false,
         };
 
         mock_git(&mut git_command, app_name, branch, rev, count, version);
@@ -447,7 +447,7 @@ mod tests {
         let args = Args {
             app_name: Some(String::from("myapp")),
             build_number: None,
-            skip_fetch: false,
+            fetch: false,
         };
 
         mock_git(&mut git_command, app_name, branch, rev, count, version);
@@ -476,7 +476,7 @@ mod tests {
         let args = Args {
             app_name: None,
             build_number: None,
-            skip_fetch: false,
+            fetch: false,
         };
 
         mock_git(&mut git_command, app_name, branch, rev, count, version);
@@ -505,7 +505,7 @@ mod tests {
         let args = Args {
             app_name: None,
             build_number: None,
-            skip_fetch: false,
+            fetch: false,
         };
 
         mock_git(&mut git_command, app_name, branch, rev, count, version);
@@ -534,7 +534,7 @@ mod tests {
         let args = Args {
             app_name: Some(String::from("myapp")),
             build_number: None,
-            skip_fetch: false,
+            fetch: false,
         };
 
         mock_git(&mut git_command, app_name, branch, rev, count, version);
@@ -564,7 +564,7 @@ mod tests {
         let args = Args {
             app_name: Some(String::from("myapp")),
             build_number: None,
-            skip_fetch: false,
+            fetch: false,
         };
 
         mock_git(&mut git_command, app_name, branch, rev, count, version);
@@ -594,7 +594,7 @@ mod tests {
         let args = Args {
             app_name: None,
             build_number: None,
-            skip_fetch: false,
+            fetch: false,
         };
 
         mock_git(&mut git_command, app_name, branch, rev, count, version);
@@ -624,7 +624,7 @@ mod tests {
         let args = Args {
             app_name: None,
             build_number: None,
-            skip_fetch: false,
+            fetch: false,
         };
 
         mock_git(&mut git_command, app_name, branch, rev, count, version);
